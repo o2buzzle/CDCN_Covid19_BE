@@ -16,7 +16,7 @@ rdrsegmenter = VnCoreNLP("../VnCoreNLP/VnCoreNLP-1.1.1.jar", annotators="wseg", 
 
 
 def do_ner(sentences_list: list) -> list:
-    df = pd.DataFrame(columns=["tokens", "predictions"])
+    df = pd.DataFrame(columns=["token", "prediction"])
     for sentences in sentences_list:
         tokenized_sentences = rdrsegmenter.tokenize(sentences)
         for sentence in tokenized_sentences:
@@ -31,22 +31,23 @@ def do_ner(sentences_list: list) -> list:
             #print(predictions)
 
             for i in [[token, labels[prediction]] for token, prediction in zip(tokens, predictions[0].numpy())]:
-                #print(i)
+                if i[0] in ["<s>", "</s>"]:
+                    continue
                 a_series = pd.Series(i, index=df.columns)
                 #print(a_series)
                 df = pd.concat([df, a_series.to_frame().T], ignore_index=True)
             #print('---------------------------------------------')
     return list(df.to_dict(orient="index").values())
 
-async def do_ner_async(sentences_list: list) -> dict:
+async def do_ner_async(sentences_list: list) -> list:
     loop = asyncio.get_event_loop()
     df = await loop.run_in_executor(None, do_ner, sentences_list)
     return df
 
-async def ner_from_file(file: io.BytesIO) -> dict:
+async def ner_from_file(file: io.BytesIO) -> list:
     sentences_list = file.read().decode("utf-8").split("\n")
     return await do_ner_async(sentences_list)
 
-async def ner_from_text(text: str):
+async def ner_from_text(text: str) -> list:
     sentences_list = text.split("\n")
     return await do_ner_async(sentences_list)
