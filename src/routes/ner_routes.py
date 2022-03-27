@@ -1,7 +1,7 @@
 from typing import List
 import fastapi
 
-from app import *
+from core.core_ner import *
 
 from models.ner_models import *
 
