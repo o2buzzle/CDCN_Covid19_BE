@@ -2,6 +2,7 @@
 
 Backend for Covid19 NER tasks 
 
+---
 To run:
 - First, make sure that: Tessaract with the Vietnamese Dictionary, Java 8 and Python 3.10 with Pip is installed on the system and is added to `PATH`
 
@@ -22,3 +23,12 @@ uvicorn api:app
 ```
 
 The model for NER should be installed automatically downloaded if it is not found during the first run
+
+--- 
+To test:
+- Clone and install depedancies (as above)
+- Change directory to `test/` and execute tests with python's unittest
+```
+cd tests/
+python -m unittest
+```
