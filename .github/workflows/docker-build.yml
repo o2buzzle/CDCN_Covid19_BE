@@ -1,0 +1,28 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deliver as Docker Image
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main, devops-cd ]
+  workflow_dispatch:
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo 
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Build Docker Container
+        run: docker build -t oner-backend .
+      - name: Save image as artifact
+        run: docker save -o oner-backend.tar oner-backend
+      - name: Archive the image as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Container rootfs
+          path: oner-backend.tar
