@@ -18,11 +18,11 @@ jobs:
         with:
           submodules: true
       - name: Build Docker Container
-        run: docker build -t oner-backend .
-      - name: Save image as artifact
-        run: docker save -o oner-backend.tar oner-backend
-      - name: Archive the image as an artifact
-        uses: actions/upload-artifact@v3
+        run: docker build -t o2buzzle/oner-backend .
+      - name: Docker Login
+        uses: docker/login-action@v2.0.0
         with:
-          name: Container rootfs
-          path: oner-backend.tar
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push to Docker Hub
+        run: docker push o2buzzle/oner-backend
