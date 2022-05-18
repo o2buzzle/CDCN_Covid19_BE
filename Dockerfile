@@ -4,7 +4,7 @@ EXPOSE 8000
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openjdk-11-jre-headless \
     python3-pip \
-    tesseract-ocr-vie \
+    tesseract-ocr tesseract-ocr-vie \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean && rm -rf /tmp/*
 
