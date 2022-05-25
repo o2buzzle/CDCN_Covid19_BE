@@ -53,11 +53,18 @@ def do_ner(sentences_list: list) -> list:
         # Insert a line break after each paragraph
         df.loc[len(df)] = ["LINEBREAK", "X-LINEBREAK"]
 
+    n_df = pd.DataFrame(columns=["token", "prediction"])
     # Remove any string instance that contains ""@@"" that may be in the result
     for index, row in df.iterrows():
-        if row["token"].find("@@") != -1:
-            row["token"] = row["token"].replace("@@", "")
-    return list(df.to_dict(orient="index").values())
+        if len(n_df) > 0:
+            if n_df.iloc[len(n_df) - 1]["token"].find("@@") != -1:
+                n_df.iloc[len(n_df) - 1] = [
+                    n_df.iloc[len(n_df) - 1]["token"].replace("@@", "") + row["token"],
+                    row["prediction"],
+                ]
+                continue
+        n_df = pd.concat([n_df, row.to_frame().T], ignore_index=True)
+    return list(n_df.to_dict(orient="index").values())
 
 
 async def do_ner_async(sentences_list: list) -> list:
