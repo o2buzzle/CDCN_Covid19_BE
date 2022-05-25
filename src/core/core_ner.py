@@ -48,6 +48,8 @@ def do_ner(sentences_list: list) -> list:
                 # print(a_series)
                 df = pd.concat([df, a_series.to_frame().T], ignore_index=True)
             # print('---------------------------------------------')
+        # Insert a line break after each paragraph
+        df.loc[len(df)] = ["LINEBREAK", "X_LINEBREAK"]
 
     # Remove any string instance that contains ""@@"" that may be in the result
     for index, row in df.iterrows():
