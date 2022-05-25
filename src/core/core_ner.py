@@ -22,6 +22,8 @@ rdrsegmenter = VnCoreNLP(
 def do_ner(sentences_list: list) -> list:
     df = pd.DataFrame(columns=["token", "prediction"])
     for sentences in sentences_list:
+        if sentences == "":
+            continue
         tokenized_sentences = rdrsegmenter.tokenize(sentences)
         for sentence in tokenized_sentences:
             sequence = " ".join(sentence)  # tạo câu mới đã được tokenized
@@ -49,7 +51,7 @@ def do_ner(sentences_list: list) -> list:
                 df = pd.concat([df, a_series.to_frame().T], ignore_index=True)
             # print('---------------------------------------------')
         # Insert a line break after each paragraph
-        df.loc[len(df)] = ["LINEBREAK", "X_LINEBREAK"]
+        df.loc[len(df)] = ["LINEBREAK", "X-LINEBREAK"]
 
     # Remove any string instance that contains ""@@"" that may be in the result
     for index, row in df.iterrows():
